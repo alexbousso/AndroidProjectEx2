@@ -35,28 +35,37 @@
             android:layout_gravity="top"
             android:id="@+id/selectSheepsTextView" />
 
-        <EditText
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:maxLength="5"
-            android:ems="10"
-            android:id="@+id/editText" />
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="number"
+                android:maxLength="5"
+                android:ems="10"
+                android:id="@+id/editText" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/WithFood"
+                android:id="@+id/checkBox" />
+
+        </LinearLayout>
 
         <SeekBar
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/seekBar" />
 
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/WithFood"
-            android:id="@+id/checkBox" />
-
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="@string/MakeOrder"
             android:id="@+id/makeOrderButton" />
 

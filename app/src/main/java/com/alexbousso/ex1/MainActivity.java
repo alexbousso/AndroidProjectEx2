@@ -1,6 +1,7 @@
 package com.alexbousso.ex1;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -47,8 +48,8 @@ public class MainActivity extends Activity {
         makeOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String text = getResources().getString(R.string.OrderSent);
-                showToast(text);
+                Intent intent = new Intent(v.getContext(), OrderSentActivity.class);
+                startActivity(intent);
             }
         });
     }

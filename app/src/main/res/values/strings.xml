@@ -1,9 +1,11 @@
 <resources>
-    <string name="app_name">Ex1</string>
+    <string name="app_name">Ex2</string>
+    <string name="OrderSentActivityTitle">OrderSent</string>
     <string name="MainActivityTitle">Sheep order form</string>
-    <string name="SelectNumOfSheeps">Please select num of sheeps</string>
+    <string name="SelectNumOfSheep">Please select num of sheep</string>
     <string name="WithFood">With food</string>
     <string name="MakeOrder">Make order</string>
     <string name="OrderSent">Order sent</string>
     <string name="BigNumberError">Error: The number is too big to be processed</string>
+    <string name="OrderSentMessage">Your order has been sent!</string>
 </resources>
