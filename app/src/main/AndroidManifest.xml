@@ -15,7 +15,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".OrderSentActivity"></activity>
+        <activity android:name=".OrderSentActivity" />
+        <activity android:name=".SelectFoodActivity"></activity>
     </application>
 
 </manifest>

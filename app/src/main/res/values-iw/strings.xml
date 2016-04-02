@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ת.ב. 3</string>
+    <string name="OrderSentActivityTitle">אישור ביצוע ההזמנה</string>
+    <string name="BigNumberError">שגיאה: המספר גדול מדי</string>
+    <string name="MainActivityTitle">טופס להזמנת כבשים</string>
+    <string name="MakeOrder">בצע הזמנה</string>
+    <string name="OrderSent">ההזמנה בוצעה בהצלחה</string>
+    <string name="OrderSentMessage">ההזמנה בוצעה בהצלחה!</string>
+    <string name="SelectNumOfSheep">בחר את מספר הכבשים</string>
+    <string name="WithFood">עם אוכל</string>
+    <string name="SelectFoodActivityTitle">בחר סוג אוכל</string>
+    <string name="action_SendOrder">שלח הזמנה</string>
+</resources>

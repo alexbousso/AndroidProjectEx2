@@ -1,10 +1,15 @@
 package com.alexbousso.ex1;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -13,7 +18,7 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private final int seekBarMaxValue = 100;
 
@@ -23,11 +28,40 @@ public class MainActivity extends Activity {
     private CheckBox checkBox;
     private Toast toast;
 
+    private boolean isSendOrderEnabled = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         initializeComponents();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_menu, menu);
+        MenuItem sendOrderItem = menu.findItem(R.id.action_sendOrder);
+        sendOrderItem.setEnabled(isSendOrderEnabled);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_sendOrder:
+                startOrderSentActivity(this);
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void startOrderSentActivity(Context context) {
+        Intent intent = new Intent(context, OrderSentActivity.class);
+        startActivity(intent);
     }
 
     private void initializeComponents() {
@@ -48,8 +82,7 @@ public class MainActivity extends Activity {
         makeOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), OrderSentActivity.class);
-                startActivity(intent);
+                startOrderSentActivity(v.getContext());
             }
         });
     }
@@ -140,22 +173,28 @@ public class MainActivity extends Activity {
         String str = editText.getText().toString();
         try {
             if (str.length() <= 0 || Integer.parseInt(str) <= 0) {
-                makeOrderButton.setEnabled(false);
+                setSendOrderEnabled(false);
                 return;
             }
         } catch (NumberFormatException e) {
             String text = getResources().getString(R.string.BigNumberError);
             showToast(text);
-            makeOrderButton.setEnabled(false);
+            setSendOrderEnabled(false);
             return;
         }
 
         if (!checkBox.isChecked()) {
-            makeOrderButton.setEnabled(false);
+            setSendOrderEnabled(false);
             return;
         }
 
-        makeOrderButton.setEnabled(true);
+        setSendOrderEnabled(true);
+    }
+
+    private void setSendOrderEnabled(boolean isEnabled) {
+        isSendOrderEnabled = isEnabled;
+        makeOrderButton.setEnabled(isEnabled);
+        invalidateOptionsMenu();
     }
 
     private void showToast(String text) {
