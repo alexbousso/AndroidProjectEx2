@@ -10,4 +10,12 @@
     <string name="OrderSentMessage">Your order has been sent!</string>
     <string name="SelectFoodActivityTitle">Select Food</string>
     <string name="action_SendOrder">Send Order</string>
+    <string name="SelectFoodButtonLabel">Select</string>
+    <string-array name="foodArray">
+        <item>Banana</item>
+        <item>Apple</item>
+        <item>Cherry</item>
+        <item>Orange</item>
+        <item>Steak</item>
+    </string-array>
 </resources>

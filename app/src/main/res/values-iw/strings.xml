@@ -11,4 +11,12 @@
     <string name="WithFood">עם אוכל</string>
     <string name="SelectFoodActivityTitle">בחר סוג אוכל</string>
     <string name="action_SendOrder">שלח הזמנה</string>
+    <string name="SelectFoodButtonLabel">בחר</string>
+    <string-array name="foodArray">
+        <item>בננה</item>
+        <item>תפוח</item>
+        <item>דובדבן</item>
+        <item>תפוז</item>
+        <item>סטייק</item>
+    </string-array>
 </resources>

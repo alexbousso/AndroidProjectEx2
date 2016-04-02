@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,9 +22,11 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     private final int seekBarMaxValue = 100;
+    private static final int FOOD_SELECTION_REQUEST = 1;
 
     private EditText editText;
     private Button makeOrderButton;
+    private Button selectFoodButton;
     private SeekBar seekBar;
     private CheckBox checkBox;
     private Toast toast;
@@ -34,8 +37,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setLogo(R.mipmap.ic_launcher);
+
         initializeComponents();
     }
 
@@ -59,6 +65,17 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == FOOD_SELECTION_REQUEST && resultCode == RESULT_OK) {
+            String foodText = data.getStringExtra(SelectFoodActivity.STRING_INTENT_RESPONSE_TAG);
+
+            showToast(String.format("Your selection was %s", foodText));
+        }
+    }
+
     private void startOrderSentActivity(Context context) {
         Intent intent = new Intent(context, OrderSentActivity.class);
         startActivity(intent);
@@ -69,11 +86,23 @@ public class MainActivity extends AppCompatActivity {
         editText = (EditText) findViewById(R.id.editText);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
         makeOrderButton = (Button) findViewById(R.id.makeOrderButton);
+        selectFoodButton = (Button) findViewById(R.id.selectFoodButton);
 
         initializeEditText();
         initializeSeekBar();
         initializeCheckBox();
         initializeMakeOrderButton();
+        initializeSelectFoodButton();
+    }
+
+    private void initializeSelectFoodButton() {
+        selectFoodButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), SelectFoodActivity.class);
+                startActivityForResult(intent, FOOD_SELECTION_REQUEST);
+            }
+        });
     }
 
     private void initializeMakeOrderButton() {
