@@ -11,6 +11,7 @@
     <string name="SelectFoodActivityTitle">Select Food</string>
     <string name="action_SendOrder">Send Order</string>
     <string name="SelectFoodButtonLabel">Select</string>
+    <string name="FoodSelectionToast">Your selection was %s</string>
     <string-array name="foodArray">
         <item>Banana</item>
         <item>Apple</item>

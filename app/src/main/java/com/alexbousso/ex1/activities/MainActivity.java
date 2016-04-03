@@ -1,4 +1,4 @@
-package com.alexbousso.ex1;
+package com.alexbousso.ex1.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +19,9 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import com.alexbousso.ex1.FoodItemContent;
+import com.alexbousso.ex1.R;
+
 public class MainActivity extends AppCompatActivity {
 
     private final int seekBarMaxValue = 100;
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar seekBar;
     private CheckBox checkBox;
     private Toast toast;
+    private MenuItem sendOrderItem;
 
     private boolean isSendOrderEnabled = false;
 
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_menu, menu);
-        MenuItem sendOrderItem = menu.findItem(R.id.action_sendOrder);
+        sendOrderItem = menu.findItem(R.id.action_sendOrder);
         sendOrderItem.setEnabled(isSendOrderEnabled);
         return super.onCreateOptionsMenu(menu);
     }
@@ -70,10 +74,21 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == FOOD_SELECTION_REQUEST && resultCode == RESULT_OK) {
-            String foodText = data.getStringExtra(SelectFoodActivity.STRING_INTENT_RESPONSE_TAG);
+            FoodItemContent item = (FoodItemContent)data.getSerializableExtra(
+                    SelectFoodActivity.SERIALIZED_FOOD_ITEM_INTENT_RESPONSE_TAG);
+            if (item == null) {
+                Log.w("MainActivity", "Deserialization of getSerializableExtra() has failed.");
+                return;
+            }
 
-            showToast(String.format("Your selection was %s", foodText));
+            showToast(String.format(getString(R.string.FoodSelectionToast), item.getFoodName()));
         }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        sendOrderItem.setEnabled(isSendOrderEnabled);
+        return super.onPrepareOptionsMenu(menu);
     }
 
     private void startOrderSentActivity(Context context) {
@@ -223,7 +238,6 @@ public class MainActivity extends AppCompatActivity {
     private void setSendOrderEnabled(boolean isEnabled) {
         isSendOrderEnabled = isEnabled;
         makeOrderButton.setEnabled(isEnabled);
-        invalidateOptionsMenu();
     }
 
     private void showToast(String text) {

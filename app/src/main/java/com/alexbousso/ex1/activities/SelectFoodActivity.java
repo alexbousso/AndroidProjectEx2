@@ -1,7 +1,5 @@
-package com.alexbousso.ex1;
+package com.alexbousso.ex1.activities;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,29 +8,24 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.LinkedHashMap;
+import com.alexbousso.ex1.FoodItemContent;
+import com.alexbousso.ex1.ImageTextArrayAdapter;
+import com.alexbousso.ex1.R;
 
 public class SelectFoodActivity extends AppCompatActivity {
-    public static final String STRING_INTENT_RESPONSE_TAG =
-            "SelectFoodActivity.STRING_INTENT_RESPONSE_TAG";
+    public static final String SERIALIZED_FOOD_ITEM_INTENT_RESPONSE_TAG =
+            "SelectFoodActivity.SERIALIZED_FOOD_ITEM_INTENT_RESPONSE_TAG";
 
     private ListView listView;
+    FoodItemContent[] items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_food);
-
-        // Changing the title of the activity
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            String orderSentStr = getResources().getString(R.string.SelectFoodActivityTitle);
-            actionBar.setTitle(orderSentStr);
-        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -51,13 +44,13 @@ public class SelectFoodActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView textView = (TextView) findViewById(R.id.item_text);
+                //TextView textView = (TextView) view.findViewById(R.id.item_text);
                 ComponentName caller = getCallingActivity();
                 try {
-                    if (textView != null && caller != null) {
+                    if (caller != null) {
                         Class activity = Class.forName(caller.getClassName());
                         Intent result = new Intent(view.getContext(), activity);
-                        result.putExtra(STRING_INTENT_RESPONSE_TAG, textView.getText());
+                        result.putExtra(SERIALIZED_FOOD_ITEM_INTENT_RESPONSE_TAG, items[position]);
                         setResult(RESULT_OK, result);
                         finish();
                     }
@@ -75,7 +68,7 @@ public class SelectFoodActivity extends AppCompatActivity {
                 R.mipmap.orange,
                 R.mipmap.steak,
         };
-        FoodItemContent[] items = new FoodItemContent[values.length];
+        items = new FoodItemContent[values.length];
         for (int i = 0; i < values.length; i++) {
             items[i] = new FoodItemContent(values[i], imgs[i]);
         }

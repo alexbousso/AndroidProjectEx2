@@ -1,6 +1,8 @@
 package com.alexbousso.ex1;
 
-public class FoodItemContent {
+import java.io.Serializable;
+
+public class FoodItemContent implements Serializable {
     private String foodName;
     private int foodImageId;
 

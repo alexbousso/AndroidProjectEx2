@@ -19,4 +19,5 @@
         <item>תפוז</item>
         <item>סטייק</item>
     </string-array>
+    <string name="FoodSelectionToast">בחירתך היא %s</string>
 </resources>
