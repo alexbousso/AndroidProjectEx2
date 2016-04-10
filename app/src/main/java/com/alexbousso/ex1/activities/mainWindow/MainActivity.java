@@ -18,7 +18,6 @@ public class MainActivity extends AppCompatActivity
     private MainFragment mainFragment;
     private Toast toast;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,10 +64,10 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().popBackStackImmediate();
             mainFragment.updateFoodSelection(item);
         } else {
-            // TODO: Tablet code goes here!
+            MainFragment fragment = (MainFragment) getSupportFragmentManager().findFragmentById(
+                    R.id.main_fragment);
+            fragment.updateFoodSelection(item);
         }
-
-        //showToast(String.format(getString(R.string.FoodSelectionToast), item.getFoodName()));
     }
 
     private void startOrderSentActivity(Context context) {

@@ -32,6 +32,7 @@ public class MainFragment extends Fragment {
     private CheckBox checkBox;
     private MenuItem sendOrderItem;
 
+    private static FoodItemContent currentItem = null;
     private boolean isSendOrderEnabled = false;
     private OnFragmentInteractionListener mListener;
 
@@ -40,6 +41,7 @@ public class MainFragment extends Fragment {
     }
 
     public void updateFoodSelection(FoodItemContent item) {
+        currentItem = item;
         selectFoodButton.setText(item.getFoodName());
     }
 
@@ -49,6 +51,10 @@ public class MainFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_main, container, false);
         initializeComponents();
         setHasOptionsMenu(true);
+
+        if (currentItem != null) {
+            updateFoodSelection(currentItem);
+        }
 
         // Inflate the layout for this fragment
         return view;
