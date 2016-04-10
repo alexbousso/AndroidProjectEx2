@@ -15,7 +15,8 @@ import com.alexbousso.ex1.activities.OrderSentActivity;
 public class MainActivity extends AppCompatActivity
         implements MainFragment.OnFragmentInteractionListener,
         FoodListFragment.OnFragmentInteractionListener {
-    private MainFragment mainFragment;
+    private static final String MAIN_FRAGMENT_TAG = "MAIN_FRAGMENT";
+
     private Toast toast;
 
     @Override
@@ -34,10 +35,10 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
 
-            mainFragment = new MainFragment();
+            MainFragment mainFragment = new MainFragment();
             mainFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction().add(
-                    R.id.fragment_container, mainFragment).commit();
+                    R.id.fragment_container, mainFragment, MAIN_FRAGMENT_TAG).commit();
         }
     }
 
@@ -62,7 +63,9 @@ public class MainActivity extends AppCompatActivity
     public void onFoodItemSelected(FoodItemContent item) {
         if (findViewById(R.id.fragment_container) != null) {
             getSupportFragmentManager().popBackStackImmediate();
-            mainFragment.updateFoodSelection(item);
+            MainFragment fragment = (MainFragment) getSupportFragmentManager().findFragmentByTag(
+                    MAIN_FRAGMENT_TAG);
+            fragment.updateFoodSelection(item);
         } else {
             MainFragment fragment = (MainFragment) getSupportFragmentManager().findFragmentById(
                     R.id.main_fragment);
