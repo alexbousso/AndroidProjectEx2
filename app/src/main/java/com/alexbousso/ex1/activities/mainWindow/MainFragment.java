@@ -1,17 +1,16 @@
-package com.alexbousso.ex1.activities;
+package com.alexbousso.ex1.activities.mainWindow;
 
-import android.content.Context;
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -22,47 +21,58 @@ import android.widget.Toast;
 import com.alexbousso.ex1.FoodItemContent;
 import com.alexbousso.ex1.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainFragment extends Fragment {
+    private static final int seekBarMaxValue = 100;
 
-    private final int seekBarMaxValue = 100;
-    private static final int FOOD_SELECTION_REQUEST = 1;
-
+    private View view;
     private EditText editText;
     private Button makeOrderButton;
     private Button selectFoodButton;
     private SeekBar seekBar;
     private CheckBox checkBox;
-    private Toast toast;
     private MenuItem sendOrderItem;
 
     private boolean isSendOrderEnabled = false;
+    private OnFragmentInteractionListener mListener;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public MainFragment() {
+        // Required empty public constructor
+    }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setLogo(R.mipmap.ic_launcher);
-
-        initializeComponents();
+    public void updateFoodSelection(FoodItemContent item) {
+        selectFoodButton.setText(item.getFoodName());
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_main, container, false);
+        initializeComponents();
+        setHasOptionsMenu(true);
+
+        // Inflate the layout for this fragment
+        return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.action_menu, menu);
         sendOrderItem = menu.findItem(R.id.action_sendOrder);
         sendOrderItem.setEnabled(isSendOrderEnabled);
-        return super.onCreateOptionsMenu(menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        sendOrderItem.setEnabled(isSendOrderEnabled);
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_sendOrder:
-                startOrderSentActivity(this);
+                mListener.onMakeOrderButtonClicked();
                 break;
         }
 
@@ -70,38 +80,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == FOOD_SELECTION_REQUEST && resultCode == RESULT_OK) {
-            FoodItemContent item = (FoodItemContent)data.getSerializableExtra(
-                    SelectFoodActivity.SERIALIZED_FOOD_ITEM_INTENT_RESPONSE_TAG);
-            if (item == null) {
-                Log.w("MainActivity", "Deserialization of getSerializableExtra() has failed.");
-                return;
-            }
-
-            showToast(String.format(getString(R.string.FoodSelectionToast), item.getFoodName()));
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) activity;
+        } else {
+            throw new RuntimeException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        sendOrderItem.setEnabled(isSendOrderEnabled);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    private void startOrderSentActivity(Context context) {
-        Intent intent = new Intent(context, OrderSentActivity.class);
-        startActivity(intent);
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     private void initializeComponents() {
-        seekBar = (SeekBar) findViewById(R.id.seekBar);
-        editText = (EditText) findViewById(R.id.editText);
-        checkBox = (CheckBox) findViewById(R.id.checkBox);
-        makeOrderButton = (Button) findViewById(R.id.makeOrderButton);
-        selectFoodButton = (Button) findViewById(R.id.selectFoodButton);
+        seekBar = (SeekBar) view.findViewById(R.id.seekBar);
+        editText = (EditText) view.findViewById(R.id.editText);
+        checkBox = (CheckBox) view.findViewById(R.id.checkBox);
+        makeOrderButton = (Button) view.findViewById(R.id.makeOrderButton);
+        selectFoodButton = (Button) view.findViewById(R.id.selectFoodButton);
 
         initializeEditText();
         initializeSeekBar();
@@ -114,8 +114,7 @@ public class MainActivity extends AppCompatActivity {
         selectFoodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), SelectFoodActivity.class);
-                startActivityForResult(intent, FOOD_SELECTION_REQUEST);
+                mListener.onFoodSelectButtonClicked();
             }
         });
     }
@@ -126,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         makeOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startOrderSentActivity(v.getContext());
+                mListener.onMakeOrderButtonClicked();
             }
         });
     }
@@ -221,8 +220,6 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
         } catch (NumberFormatException e) {
-            String text = getResources().getString(R.string.BigNumberError);
-            showToast(text);
             setSendOrderEnabled(false);
             return;
         }
@@ -240,11 +237,8 @@ public class MainActivity extends AppCompatActivity {
         makeOrderButton.setEnabled(isEnabled);
     }
 
-    private void showToast(String text) {
-        if (toast != null) {
-            toast.cancel();
-        }
-        toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
-        toast.show();
+    public interface OnFragmentInteractionListener {
+        void onFoodSelectButtonClicked();
+        void onMakeOrderButtonClicked();
     }
 }
